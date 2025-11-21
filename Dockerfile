@@ -1,4 +1,4 @@
-FROM eclipse-temurin:21-jdk-jammy
+FROM eclipse-temurin:24-jdk
 
 COPY target/pet-0.0.1-SNAPSHOT.jar /petapi-v1.war
 
