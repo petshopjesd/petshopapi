@@ -1,26 +1,3 @@
-/*package com.pet;
-    import org.springframework.context.annotation.Bean;
-    import org.springframework.context.annotation.Configuration;
-    import org.springframework.web.servlet.config.annotation.CorsRegistry;
-    import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
-
-    @Configuration
-    public class WebConfig {
-
-        @Bean
-        public WebMvcConfigurer corsConfigurer() {
-            return new WebMvcConfigurer() {
-                @Override
-                public void addCorsMappings(CorsRegistry registry) {
-                    // Permite peticiones de cualquier origen a todos los endpoints de la aplicación
-                    registry.addMapping("/**")
-                            .allowedOrigins("*") // Permite cualquier origen (dominio)
-                            .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS") // Métodos HTTP permitidos
-                            .allowedHeaders("*"); // Cabeceras permitidas
-                }
-            };
-        }
-    }*/
 package com.pet;
 
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
@@ -31,6 +8,7 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 
+import java.util.Arrays;
 import java.util.Collections;
 
 @Configuration
@@ -44,15 +22,20 @@ public class WebConfig {
         // 1. Permite que las peticiones incluyan credenciales (cookies, tokens de autenticación, etc.)
         config.setAllowCredentials(true);
 
-        // 2. USA setAllowedOriginPatterns en lugar de setAllowedOrigins.
-        //    Esto es compatible con allowCredentials = true y el comodín "*".
-        config.setAllowedOriginPatterns(Collections.singletonList("*"));
+        // 2. Define los orígenes permitidos explícitamente.
+        //    Se incluye la URL de producción y las URLs comunes de desarrollo local.
+        config.setAllowedOrigins(Arrays.asList(
+                "https://petshop-1-kepc.onrender.com",
+                "http://localhost:3000", // Para React
+                "http://localhost:4200", // Para Angular
+                "http://localhost:5173"  // Para Vite
+        ));
 
-        // Permite todas las cabeceras
+        // 3. Define los métodos HTTP permitidos.
+        config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+
+        // 4. Permite todas las cabeceras estándar.
         config.setAllowedHeaders(Collections.singletonList("*"));
-
-        // Permite todos los métodos HTTP (GET, POST, etc.)
-        config.setAllowedMethods(Collections.singletonList("*"));
 
         source.registerCorsConfiguration("/**", config);
 
